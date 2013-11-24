@@ -2,6 +2,7 @@
 /*----------------------------------------------------------------\
 // La configurazione per il programma è la seguente:              |
 // A0 Decine ore, A1 Unità ore, A2 Decine minuti, A3 Unità minuti |
+// A4 Decine secondi, A5 Unità secondi                            |
 //              2                                                 |
 //           #######                                              |
 //        7  #     #  3                                           |  
@@ -82,18 +83,22 @@ void loop()
 }
 
 void update()  
-{
+{  
   byte timeFigures[6] = {hour() / 10, hour() % 10, minute() / 10, minute() % 10, second() / 10, second() % 10};   
   for(int i = 0; i < 6; i++)
-  {  
-    digitalWrite (Vp[i], HIGH);
+  {
+    digitalWrite (Vp[i], HIGH);     
     for(int j = 0; j < 8; j++)
     {
-      if(NMatrix[timeFigures[i]][j])
-        digitalWrite(SEG[j], LOW);
+      if(NMatrix[timeFigures[i]][j])      
+        digitalWrite(SEG[j], LOW);           
       else
         digitalWrite(SEG[j], HIGH);
-    }  
+    } 
+    if(i == 3 && second() % 2 == 0)
+    {
+      digitalWrite(SEG[7], LOW);
+    }    
     delay(1);
     digitalWrite (Vp[i], LOW);
   }
