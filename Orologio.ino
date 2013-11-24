@@ -80,6 +80,3 @@ void update()
     digitalWrite (Vp[i], LOW);
   }
 }
-
-
-
