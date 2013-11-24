@@ -27,7 +27,16 @@ boolean NMatrix[10][8] = {
   {1, 1, 1, 1, 0, 1, 1, 0}}; //9
 void setup() 
 {
-  setTime(00, 00, 00, 00, 00, 00);
+  byte hh = 0, mm = 0, ss = 0;
+  Serial.begin(9600);
+  Serial.write('h');
+  Serial.flush();
+  while(Serial.available() == 0) ;
+  hh = Serial.read();
+  Serial.write('m');
+  while(Serial.available() == 0) ;
+  mm = Serial.read();
+    setTime(hh, mm, ss, 00, 00, 00);
   
   for (int i = 0; i < 8; i++)
   {    
