@@ -24,17 +24,27 @@ void main()
 	{
 		//cout << _COMHandler.readFromCOMM(comPort) << endl;
 		hhmmss = localtime(&t);
-		if(_COMHandler.readFromCOMM(comPort) == 'h')
+		switch(_COMHandler.readFromCOMM(comPort))
 		{
-			cout << "Trasmetto ore..." << endl;
-			_COMHandler.sendByte(hhmmss->tm_hour, comPort);
+		case 'h':
+			{
+				cout << "Trasmetto ore..." << endl;
+				_COMHandler.sendByte(hhmmss->tm_hour, comPort);
+				break;
+			}
+		case 'm':
+			{
+				cout << "Trasmetto minuti.." << endl;
+				_COMHandler.sendByte(hhmmss->tm_min, comPort);
+				break;
+			}
+		case 's':
+			{
+				cout << "Trasmetto secondi..." << endl;
+				_COMHandler.sendByte(hhmmss->tm_sec, comPort);
+				break;
+			}		
 		}
-		else if(_COMHandler.readFromCOMM(comPort) == 'm')
-		{
-			cout << "Trasmetto minuti.." << endl;
-			_COMHandler.sendByte(hhmmss->tm_min, comPort);
-		}
-
 	}
 }
 
