@@ -13,7 +13,7 @@
 //              5                                                 |   
 \----------------------------------------------------------------*/
 int SEG[8] = {2, 3, 4, 5, 6, 7, 8, 9}; 
-int Vp[4] = {A0, A1, A2, A3};
+int Vp[6] = {A0, A1, A2, A3, A4, A5};
 boolean NMatrix[10][8] = {
   {1, 1, 1, 1, 1, 1, 0, 0},  //0
   {0, 1, 1, 0, 0, 0, 0, 0},  //1
@@ -28,29 +28,38 @@ boolean NMatrix[10][8] = {
 void setup() 
 {
   byte hh = 0, mm = 0, ss = 0;
+  
+  pinMode(13, OUTPUT);
+  
   Serial.begin(9600); 
    
   while(Serial.available() == 0) 
-  {    
+  { 
+    tone(13, 2000, 10);   
     Serial.write('h'); 
     delay(1000);
   }
+  tone(13, 1000, 50);  
   hh = Serial.read();  
   delay(100);
     
   while(Serial.available() == 0) 
   {    
+    tone(13, 2000, 10);   
     Serial.write('m'); 
     delay(1000);
   }
+  tone(13, 1000, 50); 
   mm = Serial.read();
   delay(100);
     
   while(Serial.available() == 0) 
   {    
+    tone(13, 2000, 10);   
     Serial.write('s'); 
     delay(1000);
   }
+  tone(13, 1000, 50); 
   ss = Serial.read();
   
   setTime(hh, mm, ss, 00, 00, 00);
@@ -60,7 +69,7 @@ void setup()
     pinMode(SEG[i], OUTPUT);  
     digitalWrite(SEG[i], HIGH); 
   }
-  for (int i = 0; i < 4; i++)
+  for (int i = 0; i < 6; i++)
   {
     pinMode(Vp[i], OUTPUT);
     digitalWrite(Vp[i], LOW);
@@ -74,8 +83,8 @@ void loop()
 
 void update()  
 {
-  byte timeFigures[4] = {hour() / 10, hour() % 10, minute() / 10, minute() % 10};   
-  for(int i = 0; i < 4; i++)
+  byte timeFigures[6] = {hour() / 10, hour() % 10, minute() / 10, minute() % 10, second() / 10, second() % 10};   
+  for(int i = 0; i < 6; i++)
   {  
     digitalWrite (Vp[i], HIGH);
     for(int j = 0; j < 8; j++)
@@ -85,7 +94,7 @@ void update()
       else
         digitalWrite(SEG[j], HIGH);
     }  
-    delay(5);
+    delay(1);
     digitalWrite (Vp[i], LOW);
   }
 }
