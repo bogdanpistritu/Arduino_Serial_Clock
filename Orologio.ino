@@ -29,19 +29,28 @@ void setup()
 {
   byte hh = 0, mm = 0, ss = 0;
   Serial.begin(9600); 
-  
-  Serial.write('h'); 
-  while(Serial.available() == 0) ;
+   
+  while(Serial.available() == 0) 
+  {    
+    Serial.write('h'); 
+    delay(1000);
+  }
   hh = Serial.read();  
   delay(100);
-  
-  Serial.write('m');
-  while(Serial.available() == 0) ;
+    
+  while(Serial.available() == 0) 
+  {    
+    Serial.write('m'); 
+    delay(1000);
+  }
   mm = Serial.read();
   delay(100);
-  
-  Serial.write('s');
-  while(Serial.available() == 0) ;
+    
+  while(Serial.available() == 0) 
+  {    
+    Serial.write('s'); 
+    delay(1000);
+  }
   ss = Serial.read();
   
   setTime(hh, mm, ss, 00, 00, 00);
@@ -76,7 +85,7 @@ void update()
       else
         digitalWrite(SEG[j], HIGH);
     }  
-    delay(1);
+    delay(5);
     digitalWrite (Vp[i], LOW);
   }
 }
