@@ -1,11 +1,13 @@
 #pragma once
 #include <Windows.h>
+#include <string>
 class BasicCOMOperation
 {
 public:
-	BasicCOMOperation(void);	
+	HANDLE comPort;
+	BasicCOMOperation(std::string s);	
 	~BasicCOMOperation(void);
-	HANDLE openCOMM(LPCWSTR);
+	bool openCOMM(LPCWSTR);
 	void writeToCOMM(char[], HANDLE); //Manda alla porta COM selezionata un array di byte.	
 	void sendByte(char, HANDLE);
 	char readFromCOMM(HANDLE);

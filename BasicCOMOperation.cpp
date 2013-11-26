@@ -2,12 +2,15 @@
 #include "BasicCOMOperation.h"
 #include <Windows.h>
 #include <iostream>
+#include <string>
 
 DWORD byteWritten = 0;
 DWORD byteRead = 0;
-
-BasicCOMOperation::BasicCOMOperation(void)
-{
+const char* COM;
+HANDLE comPort;
+	
+BasicCOMOperation::BasicCOMOperation(std::string s) {
+	COM = s.c_str();
 }
 
 void BasicCOMOperation::sendByte(char byte, HANDLE commHandle) {
@@ -30,7 +33,7 @@ char BasicCOMOperation::readFromCOMM(HANDLE commHandle) {
 	return read;
 }
 
-HANDLE BasicCOMOperation::openCOMM(LPCWSTR COM) {
+bool BasicCOMOperation::openCOMM(LPCWSTR COM) {
 
     HANDLE handle;
     handle = CreateFile(COM, GENERIC_READ | GENERIC_WRITE, 0, 0, OPEN_EXISTING, FILE_FLAG_NO_BUFFERING, 0);
@@ -38,7 +41,7 @@ HANDLE BasicCOMOperation::openCOMM(LPCWSTR COM) {
 
 		if(GetLastError()==ERROR_FILE_NOT_FOUND) 
 			std::cout << "Errore la porta non esiste\n";
-		return NULL;
+		return false;
     }    
 	if(!SetupComm(handle, 4, 4))
 		std::cout << "Error\n";    
@@ -46,7 +49,7 @@ HANDLE BasicCOMOperation::openCOMM(LPCWSTR COM) {
     if(!GetCommState(handle, &serialParams)) {
 
 		std::cout << "Errore\n";
-		return NULL;     
+		return false;     
     }
     serialParams.BaudRate = 9600;
     serialParams.ByteSize = 8;
@@ -61,7 +64,7 @@ HANDLE BasicCOMOperation::openCOMM(LPCWSTR COM) {
     
     if(!SetCommState(handle, &serialParams)) {
 		std::cout << "Errore\n";
-		return NULL;
+		return false;
     }
 	COMMTIMEOUTS timeouts = {0};
     timeouts.ReadIntervalTimeout = 50;
@@ -72,9 +75,10 @@ HANDLE BasicCOMOperation::openCOMM(LPCWSTR COM) {
     
     if(!SetCommTimeouts(handle, &timeouts)) {
 		std::cout << "Errore\n";
-		return NULL;
+		return false;
     }
-	return handle;
+	comPort = handle;
+	return true;
 }
 
 BasicCOMOperation::~BasicCOMOperation(void)

@@ -6,10 +6,10 @@
 
 using namespace std;
 
-HANDLE comPort = NULL; 
+HANDLE hndl = NULL; 
 time_t t = time(0);
 struct tm * hhmmss;
-BasicCOMOperation _COMHandler = BasicCOMOperation();
+BasicCOMOperation * _COMHandler = new BasicCOMOperation("COM3");
 
 int _tmain(int argc, _TCHAR* argv[])
 {
@@ -18,30 +18,36 @@ int _tmain(int argc, _TCHAR* argv[])
 
 void main()
 {
-	comPort = _COMHandler.openCOMM(L"COM9");
-	cout << "Aspetto chiamata..." << endl;
+	do
+	{
+		Sleep(1000);	
+		system("CLS");
+		cout << "Tentativo di aprire la COM3..." << endl;
+	}while(!_COMHandler->openCOMM(L"COM3"));
+	hndl = _COMHandler->comPort;
+	cout << "[ OK ]" << endl << "Aspetto chiamata" << endl;
 	while(true)
 	{
 		//cout << _COMHandler.readFromCOMM(comPort) << endl;
 		hhmmss = localtime(&t);
-		switch(_COMHandler.readFromCOMM(comPort))
+		switch(_COMHandler->readFromCOMM(hndl))
 		{
 		case 'h':
 			{
-				cout << "Trasmetto ore..." << endl;
-				_COMHandler.sendByte(hhmmss->tm_hour, comPort);
+				cout << "Trasmetto ore [ " << hhmmss->tm_hour << " ]" << endl;
+				_COMHandler->sendByte(hhmmss->tm_hour, hndl);				
 				break;
 			}
 		case 'm':
 			{
-				cout << "Trasmetto minuti.." << endl;
-				_COMHandler.sendByte(hhmmss->tm_min, comPort);
+				cout << "Trasmetto minuti [ " << hhmmss->tm_min << " ]"<< endl;
+				_COMHandler->sendByte(hhmmss->tm_min, hndl);				
 				break;
 			}
 		case 's':
 			{
-				cout << "Trasmetto secondi..." << endl;
-				_COMHandler.sendByte(hhmmss->tm_sec, comPort);
+				cout << "Trasmetto secondi [ " << hhmmss->tm_sec << " ]" << endl;
+				_COMHandler->sendByte(hhmmss->tm_sec, hndl);				
 				break;
 			}		
 		}
